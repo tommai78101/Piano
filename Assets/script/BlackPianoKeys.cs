@@ -4,8 +4,10 @@ using System.Collections;
 
 public class BlackPianoKeys : MonoBehaviour {
 	public GameObject keyPrefab;
-	public float horizontalOffset;
 	public GameObject noteImageUI;
+	public GameObject noteParent;
+	public float horizontalOffset;
+
 	public static readonly float CONSTANT = (float)(Screen.width / Screen.height) / 2.09f;
 
 	public void Start () {
@@ -22,7 +24,7 @@ public class BlackPianoKeys : MonoBehaviour {
 			}
 			for (int j = 0; j < groups; j++) {
 				GameObject obj = MonoBehaviour.Instantiate(this.keyPrefab) as GameObject;
-				obj.transform.SetParent(this.transform);
+				obj.transform.SetParent(this.transform, false);
 				RectTransform rectTrans = obj.GetComponent<RectTransform>();
 				if (rectTrans != null) {
 					rectTrans.localScale = new Vector3(0.64f, 0.8f, 1f);
@@ -32,6 +34,7 @@ public class BlackPianoKeys : MonoBehaviour {
 				KeyNote note = obj.GetComponent<KeyNote>();
 				if (note != null) {
 					note.noteObject = MonoBehaviour.Instantiate(this.noteImageUI) as GameObject;
+					note.noteObject.transform.SetParent(this.noteParent.transform, false);
 					Image image = note.noteObject.GetComponent<Image>();
 					if (image != null) {
 						image.overrideSprite = Resources.Load<Sprite>("image/note.png");

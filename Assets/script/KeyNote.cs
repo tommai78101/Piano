@@ -85,8 +85,8 @@ public class KeyNote : MonoBehaviour {
 	public void onClick() {
 		if (this.noteObject != null) {
 			if (note.value % 2 == 1) {
-				int newHeight = (note.value - 1) / 2;
-				this.notePosition.localPosition = new Vector3(0, (float)(newHeight * 5f), 0);
+				int newHeight = octave * 7 + (note.value - 1) / 2;
+				this.notePosition.localPosition = new Vector3(0, (float)(newHeight * (5.8f)), 0);
 				this.cooldown = 250;
 				Debug.Log(note.letter + octave);
 			}
@@ -102,7 +102,7 @@ public class KeyNote : MonoBehaviour {
 				cooldown--;
 			}
 			else {
-				this.notePosition.localPosition = new Vector3(0, -10f, 0);
+				this.notePosition.localPosition = new Vector3(0, -200f, 0);
 			}
 		}
 	}

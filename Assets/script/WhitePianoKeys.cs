@@ -5,6 +5,7 @@ using System.Collections;
 public class WhitePianoKeys : MonoBehaviour {
 	public GameObject keyPrefab;
 	public GameObject noteImageUI;
+	public GameObject noteParent;
 	public float horizontalOffset;
 
 	public void Start() {
@@ -17,7 +18,7 @@ public class WhitePianoKeys : MonoBehaviour {
 		int counter = 0;
 		for (int i = 0; i < 37; i++) {
 			GameObject obj = MonoBehaviour.Instantiate(this.keyPrefab) as GameObject;
-			obj.transform.SetParent(this.transform);
+			obj.transform.SetParent(this.transform, false);
 			RectTransform rectTrans = obj.GetComponent<RectTransform>();
 			if (rectTrans != null) {
 				rectTrans.localScale = Vector3.one;
@@ -27,6 +28,7 @@ public class WhitePianoKeys : MonoBehaviour {
 			KeyNote note = obj.GetComponent<KeyNote>();
 			if (note != null) {
 				note.noteObject = MonoBehaviour.Instantiate(this.noteImageUI) as GameObject;
+				note.noteObject.transform.SetParent(this.noteParent.transform, false);
 				Image image = note.noteObject.GetComponent<Image>();
 				if (image != null) {
 					image.overrideSprite = Resources.Load<Sprite>("image/note.png");
