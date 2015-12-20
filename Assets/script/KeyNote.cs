@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Collections.Generic;
-
+using System;
 
 public class Note {
 	public static readonly Note C = new Note("C-", 1);
@@ -69,12 +70,13 @@ public class Note {
 	}
 }
 
-public class KeyNote : MonoBehaviour {
+public class KeyNote : MonoBehaviour, IPointerUpHandler, IPointerDownHandler {
 	public Note note;
 	public int octave;
+	public bool sharpFlag;
 	public GameObject noteObject;
 	public RectTransform notePosition;
-	public int cooldown = 0;
+	public bool pressed = false;
 
 	public void Start() {
 		if (this.noteObject != null) {
@@ -82,28 +84,36 @@ public class KeyNote : MonoBehaviour {
 		}
 	}
 
-	public void onClick() {
+	public void Update() {
 		if (this.noteObject != null) {
-			if (note.value % 2 == 1) {
-				int newHeight = octave * 7 + (note.value - 1) / 2;
-				this.notePosition.localPosition = new Vector3(0, (float)(newHeight * (5.8f)), 0);
-				this.cooldown = 250;
-				Debug.Log(note.letter + octave);
+			if (!this.pressed) {
+				this.notePosition.localPosition = new Vector3(0, -400f, 0);
 			}
 			else {
-				Debug.Log("Something is wrong.");
+				if (note.value % 2 == 1) {
+					this.sharpFlag = false;
+					Image[] noteSharp = this.noteObject.GetComponentsInChildren<Image>();
+					if (noteSharp != null && noteSharp.Length == 2) {
+						noteSharp[1].enabled = false;
+					}
+					int newHeight = octave * 7 + (note.value - 1) / 2;
+					this.notePosition.localPosition = new Vector3(0, (float) (newHeight * (5.8f)), 0);
+					Debug.Log(note.letter + octave);
+				}
+				else {
+					int newHeight = octave * 7 + (note.value) / 2;
+					this.notePosition.localPosition = new Vector3(0, (float) (newHeight * (5.8f)), 0);
+					Debug.Log(note.letter + octave);
+				}
 			}
 		}
 	}
 
-	public void Update() {
-		if (this.noteObject != null) {
-			if (cooldown > 0) {
-				cooldown--;
-			}
-			else {
-				this.notePosition.localPosition = new Vector3(0, -200f, 0);
-			}
-		}
+	public void OnPointerUp(PointerEventData eventData) {
+		this.pressed = false;
+	}
+
+	public void OnPointerDown(PointerEventData eventData) {
+		this.pressed = true;
 	}
 }
